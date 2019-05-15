@@ -1,0 +1,11 @@
+[package]
+name = "ssri"
+version = "0.1.0"
+authors = ["Kat Marchán <kzm@zkat.tech>"]
+edition = "2018"
+
+[dependencies]
+sha2 = "0.8.0"
+base64 = "0.10.1"
+sha1 = "0.6.0"
+digest = "0.8.0"
