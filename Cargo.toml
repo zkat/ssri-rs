@@ -3,6 +3,7 @@ name = "ssri"
 version = "0.1.0"
 authors = ["Kat Marchán <kzm@zkat.tech>"]
 edition = "2018"
+license = "MIT"
 
 [dependencies]
 sha2 = "0.8.0"
