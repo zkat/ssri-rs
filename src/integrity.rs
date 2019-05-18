@@ -2,34 +2,64 @@ use crate::hash::Hash;
 use crate::algorithm::Algorithm;
 use crate::builder::IntegrityBuilder;
 use std::fmt;
+use std::error::Error;
 
 #[derive(Clone, Debug)]
-pub struct Integrity<'a> {
-    pub hashes: Vec<Hash<'a>>
+pub struct Integrity {
+    pub hashes: Vec<Hash>
 }
 
-impl<'a> fmt::Display for Integrity<'a> {
+impl fmt::Display for Integrity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         unimplemented!()
     }
 }
 
-impl<'a> Integrity<'a> {
+impl std::str::FromStr for Integrity {
+    type Err = ParseIntegrityError;
+
+    fn from_str(s: &str) -> Result<Integrity, Self::Err> {
+        let hashes = String::from(s)
+            .split_whitespace()
+            .map(|x| x.parse())
+            .collect::<Result<Vec<Hash>, Self::Err>>()?;
+        Ok(Integrity { hashes })
+    }
+}
+
+impl Integrity {
     pub fn new() -> IntegrityBuilder {
         unimplemented!()
     }
     pub fn concat(&self, other: Integrity) -> Self {
         unimplemented!()
     }
-    pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, IntegrityError> {
+    pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, ParseIntegrityError> {
         unimplemented!()
     }
 }
 
 #[derive(Debug)]
-pub struct IntegrityError {}
-impl fmt::Display for IntegrityError {
+pub struct ParseIntegrityError {}
+impl fmt::Display for ParseIntegrityError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         unimplemented!()
+    }
+}
+impl Error for ParseIntegrityError {}
+
+#[cfg(test)]
+mod tests {
+    use super::Hash;
+    use super::Algorithm;
+    use super::Integrity;
+
+    #[test]
+    fn parse() {
+        let sri: Integrity = "sha1-deadbeef=".parse().unwrap();
+        assert_eq!(
+            sri.hashes.get(0).unwrap(),
+            &Hash::new(Algorithm::Sha1, String::from("deadbeef="))
+        )
     }
 }

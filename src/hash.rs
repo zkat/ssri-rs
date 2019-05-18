@@ -1,14 +1,15 @@
 use crate::algorithm::Algorithm;
+use crate::integrity::ParseIntegrityError;
 use std::fmt;
 
-#[derive(Clone, Debug)]
-pub struct Hash<'a> {
+#[derive(Clone, Debug, PartialEq)]
+pub struct Hash {
     pub algorithm: Algorithm,
-    pub digest: &'a [u8]
+    pub digest: String
 }
 
-impl<'a> Hash<'a> {
-    pub fn new(algo: Algorithm, digest: &[u8]) -> Hash {
+impl Hash {
+    pub fn new(algo: Algorithm, digest: String) -> Hash {
         Hash {
             algorithm: algo,
             digest: digest
@@ -16,9 +17,20 @@ impl<'a> Hash<'a> {
     }
 }
 
-impl<'a> fmt::Display for Hash<'a> {
+impl fmt::Display for Hash {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}-{}", self.algorithm, base64::encode(&self.digest))
+        write!(f, "{}-{}", self.algorithm, self.digest)
+    }
+}
+
+impl std::str::FromStr for Hash {
+    type Err = ParseIntegrityError;
+
+    fn from_str(s: &str) -> Result<Hash, Self::Err> {
+        let mut parsed = s.split(|c| c == '-');
+        let algorithm = parsed.next().ok_or(ParseIntegrityError{})?.parse()?;
+        let digest = String::from(parsed.next().ok_or(ParseIntegrityError{})?);
+        Ok(Hash { algorithm, digest })
     }
 }
 
@@ -30,8 +42,8 @@ mod tests {
     #[test]
     fn hash_stringify() {
         assert_eq!(
-            format!("{}", Hash::new(Algorithm::Sha256, &[1, 2, 3, 4])),
-            "sha256-AQIDBA=="
+            format!("{}", Hash::new(Algorithm::Sha256, String::from("deadbeef=="))),
+            "sha256-deadbeef=="
         )
     }
 }
