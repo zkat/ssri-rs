@@ -1,6 +1,3 @@
-extern crate base64;
-extern crate sha1;
-extern crate sha2;
 mod algorithm;
 mod hash;
 mod integrity;
