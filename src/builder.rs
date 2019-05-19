@@ -78,3 +78,22 @@ impl Builder {
         Integrity { hashes }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Builder;
+    use super::Algorithm;
+
+    #[test]
+    fn basic_test() {
+        let mut builder = Builder::new();
+        builder.algorithm(Algorithm::Sha1);
+        builder.algorithm(Algorithm::Sha256);
+        builder.input(b"hello world");
+        let result = builder.result();
+        assert_eq!(
+            result.to_string(),
+            "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek= sha1-Kq5sNclPz7QV2+lfQIuc6R7oRu0="
+        )
+    }
+}
