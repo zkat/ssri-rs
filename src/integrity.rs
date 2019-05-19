@@ -68,7 +68,10 @@ mod tests {
         let sri: Integrity = "sha1-deadbeef=".parse().unwrap();
         assert_eq!(
             sri.hashes.get(0).unwrap(),
-            &Hash::new(Algorithm::Sha1, String::from("deadbeef="))
+            &Hash {
+                algorithm: Algorithm::Sha1,
+                digest: String::from("deadbeef=")
+            }
         )
     }
 }
