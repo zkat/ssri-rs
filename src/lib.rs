@@ -45,8 +45,10 @@ mod algorithm;
 mod hash;
 mod integrity;
 mod builder;
+mod checker;
 
 pub use algorithm::Algorithm;
 pub use builder::Builder;
+pub use checker::Checker;
 pub use hash::Hash;
 pub use integrity::*;

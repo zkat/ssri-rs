@@ -1,6 +1,7 @@
-use crate::hash::Hash;
 use crate::algorithm::Algorithm;
 use crate::builder::Builder;
+use crate::checker::Checker;
+use crate::hash::Hash;
 use std::fmt;
 use std::error::Error;
 
@@ -43,8 +44,10 @@ impl Integrity {
         hashes.dedup();
         Integrity { hashes }
     }
-    pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, ParseIntegrityError> {
-        unimplemented!()
+    pub fn check<B: AsRef<[u8]>>(self, data: B) -> Option<Algorithm> {
+        let mut checker = Checker::new(self);
+        checker.input(&data);
+        checker.result()
     }
 }
 
