@@ -1,12 +1,12 @@
 use std::fmt;
 use crate::integrity::ParseIntegrityError;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Algorithm {
-    Sha1,
-    Sha256,
-    Sha384,
     Sha512,
+    Sha384,
+    Sha256,
+    Sha1,
 }
 
 impl fmt::Display for Algorithm {
@@ -39,5 +39,22 @@ mod tests {
         assert_eq!(format!("{}", Algorithm::Sha256), "sha256");
         assert_eq!(format!("{}", Algorithm::Sha384), "sha384");
         assert_eq!(format!("{}", Algorithm::Sha512), "sha512");
+    }
+
+    #[test]
+    fn ordering() {
+        let mut arr = [
+            Algorithm::Sha1,
+            Algorithm::Sha256,
+            Algorithm::Sha384,
+            Algorithm::Sha512,
+        ];
+        arr.sort_unstable();
+        assert_eq!(arr, [
+            Algorithm::Sha512,
+            Algorithm::Sha384,
+            Algorithm::Sha256,
+            Algorithm::Sha1,
+        ])
     }
 }
