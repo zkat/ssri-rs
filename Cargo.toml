@@ -3,7 +3,10 @@ name = "ssri"
 version = "0.1.0"
 authors = ["Kat Marchán <kzm@zkat.tech>"]
 edition = "2018"
-license = "MIT"
+description = "Various utilities for handling Subresource Integrity."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/zkat/ssri-rs"
+homepage = "https://github.com/zkat/ssri-rs"
 
 [dependencies]
 sha2 = "0.8.0"
