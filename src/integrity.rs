@@ -11,7 +11,10 @@ pub struct Integrity {
 
 impl fmt::Display for Integrity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unimplemented!()
+        write!(f, "{}", self.hashes.iter()
+            .map(|h| h.to_string())
+            .collect::<Vec<String>>()
+            .join(" "))
     }
 }
 
