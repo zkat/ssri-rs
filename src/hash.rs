@@ -1,22 +1,25 @@
 use crate::algorithm::Algorithm;
 use crate::integrity::ParseIntegrityError;
+use std::cmp::Ordering;
 use std::fmt;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Hash {
     pub algorithm: Algorithm,
     pub digest: String
 }
 
-impl Hash {
-    pub fn new(algo: Algorithm, digest: String) -> Hash {
-        Hash {
-            algorithm: algo,
-            digest: digest
-        }
+impl PartialOrd for Hash {
+    fn partial_cmp(&self, other: &Hash) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
+impl Ord for Hash {
+    fn cmp(&self, other: &Hash) -> Ordering {
+        self.algorithm.cmp(&other.algorithm)
+    }
+}
 impl fmt::Display for Hash {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}-{}", self.algorithm, self.digest)
@@ -42,7 +45,10 @@ mod tests {
     #[test]
     fn hash_stringify() {
         assert_eq!(
-            format!("{}", Hash::new(Algorithm::Sha256, String::from("deadbeef=="))),
+            format!("{}", Hash {
+                algorithm: Algorithm::Sha256,
+                digest: String::from("deadbeef==")
+            }),
             "sha256-deadbeef=="
         )
     }
