@@ -16,7 +16,7 @@ assert_eq!(parsed.to_string(), integrity)
 
 Generating a new hash from file data:
 ```no_run
-# use ssri::{Algorithm};
+# use ssri::{Integrity, Algorithm};
 # use std::fs::File;
 # use std::io::prelude::*;
 // Get file data...
@@ -33,7 +33,7 @@ builder.input(&contents);
 let sri = builder.result();
 
 // Or use from() for a simpler interface that works in most cases.
-let sri = ssri::from(&contents, Algorithm::Sha256);
+let sri = Integrity::from(&contents, Algorithm::Sha256);
 
 assert_eq!(sri.to_string(), "sha256-deadbeef");
 
