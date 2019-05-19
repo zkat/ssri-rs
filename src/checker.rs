@@ -17,7 +17,7 @@ impl Checker {
     pub fn input<B: AsRef<[u8]>>(&mut self, data: B) {
         self.builder.input(data);
     }
-    pub fn result(&mut self) -> Option<Algorithm> {
+    pub fn result(self) -> Option<Algorithm> {
         let sri = self.builder.result();
         let hash = sri.hashes.get(0).unwrap();
         for h in self.sri.hashes.iter() {
