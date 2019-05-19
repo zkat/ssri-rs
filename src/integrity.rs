@@ -52,7 +52,7 @@ impl Integrity {
 pub struct ParseIntegrityError {}
 impl fmt::Display for ParseIntegrityError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unimplemented!()
+        write!(f, "failed to parse Subresource Integrity string")
     }
 }
 impl Error for ParseIntegrityError {}
