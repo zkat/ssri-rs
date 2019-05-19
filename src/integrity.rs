@@ -1,5 +1,6 @@
 use crate::hash::Hash;
 use crate::algorithm::Algorithm;
+use crate::builder::Builder;
 use std::fmt;
 use std::error::Error;
 
@@ -27,16 +28,18 @@ impl std::str::FromStr for Integrity {
 }
 
 impl Integrity {
+    pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
+        let mut builder = Builder::new();
+        builder.algorithm(algorithm);
+        builder.input(&data);
+        builder.result()
+    }
     pub fn concat(&self, other: Integrity) -> Self {
         unimplemented!()
     }
     pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, ParseIntegrityError> {
         unimplemented!()
     }
-}
-
-pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
-    unimplemented!()
 }
 
 #[derive(Debug)]
