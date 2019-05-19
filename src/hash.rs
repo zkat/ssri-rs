@@ -30,7 +30,7 @@ impl std::str::FromStr for Hash {
     type Err = ParseIntegrityError;
 
     fn from_str(s: &str) -> Result<Hash, Self::Err> {
-        let mut parsed = s.split(|c| c == '-');
+        let mut parsed = s.trim().split(|c| c == '-');
         let algorithm = parsed.next().ok_or(ParseIntegrityError{})?.parse()?;
         let digest = String::from(parsed.next().ok_or(ParseIntegrityError{})?);
         Ok(Hash { algorithm, digest })
