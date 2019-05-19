@@ -52,4 +52,63 @@ mod tests {
             "sha256-deadbeef=="
         )
     }
+
+    #[test]
+    fn parsing() {
+        assert_eq!(
+            " sha256-deadbeef== \n".parse::<Hash>().unwrap(),
+            Hash {
+                algorithm: Algorithm::Sha256,
+                digest: String::from("deadbeef==")
+            }
+        )
+    }
+
+    #[test]
+    #[should_panic]
+    fn bad_algorithm() {
+        // TODO - test the actual error returned when it's more valuable
+        "sha7-deadbeef==".parse::<Hash>().unwrap();
+    }
+
+    #[test]
+    fn ordering() {
+        let mut arr = [
+            Hash {
+                algorithm: Algorithm::Sha1,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha256,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha384,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha512,
+                digest: String::from("foo==")
+            }
+        ];
+        arr.sort_unstable();
+        assert_eq!(arr, [
+            Hash {
+                algorithm: Algorithm::Sha512,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha384,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha256,
+                digest: String::from("foo==")
+            },
+            Hash {
+                algorithm: Algorithm::Sha1,
+                digest: String::from("foo==")
+            }
+        ])
+    }
 }
