@@ -2,8 +2,11 @@ use crate::algorithm::Algorithm;
 use crate::integrity::Integrity;
 
 #[derive(Clone)]
-pub struct IntegrityBuilder {}
-impl IntegrityBuilder {
+pub struct Builder {}
+impl Builder {
+    pub fn new() -> Builder {
+        Builder {}
+    }
     pub fn algorithm(&mut self, algo: Algorithm) {
         unimplemented!()
     }

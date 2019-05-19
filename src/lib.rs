@@ -16,7 +16,7 @@ assert_eq!(parsed.to_string(), integrity)
 
 Generating a new hash from file data:
 ```no_run
-# use ssri::{Algorithm, Integrity};
+# use ssri::{Algorithm};
 # use std::fs::File;
 # use std::io::prelude::*;
 // Get file data...
@@ -24,12 +24,16 @@ let mut file = File::open("foo.txt").unwrap();
 let mut contents = String::new();
 file.read_to_string(&mut contents).unwrap();
 
-// Hand it to ssri.
-let mut hasher = Integrity::new();
-hasher.algorithm(Algorithm::Sha256);
-hasher.input(&contents);
+// Use a builder for more options + streaming data support.
+let mut builder = ssri::Builder::new();
+builder.algorithm(Algorithm::Sha512);
+builder.algorithm(Algorithm::Sha1);
+builder.input(&contents);
+// builder.input(...more stuff);
+let sri = builder.result();
 
-let sri = hasher.result();
+// Or use from() for a simpler interface that works in most cases.
+let sri = ssri::from(&contents, Algorithm::Sha256);
 
 assert_eq!(sri.to_string(), "sha256-deadbeef");
 
@@ -43,5 +47,6 @@ mod integrity;
 mod builder;
 
 pub use algorithm::Algorithm;
+pub use builder::Builder;
 pub use hash::Hash;
 pub use integrity::*;
