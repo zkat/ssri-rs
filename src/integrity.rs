@@ -38,7 +38,10 @@ impl Integrity {
         builder.result()
     }
     pub fn concat(&self, other: Integrity) -> Self {
-        unimplemented!()
+        let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();
+        hashes.sort_unstable();
+        hashes.dedup();
+        Integrity { hashes }
     }
     pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, ParseIntegrityError> {
         unimplemented!()
