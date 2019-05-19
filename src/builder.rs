@@ -14,7 +14,7 @@ impl Builder {
     pub fn input<B: AsRef<[u8]>>(&mut self, input: B) {
         unimplemented!()
     }
-    pub fn chain<B: AsRef<[u8]>>(self, data: B) -> Self {
+    pub fn chain<B: AsRef<[u8]>>(&mut self, data: B) -> Self {
         unimplemented!()
     }
     // Digest::Reset
