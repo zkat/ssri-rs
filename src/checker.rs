@@ -32,3 +32,22 @@ impl Checker {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Checker;
+    use super::Integrity;
+    use super::Algorithm;
+
+    #[test]
+    fn basic_test() {
+        let sri = Integrity::from(b"hello world", Algorithm::Sha256);
+        let mut checker = Checker::new(sri);
+        checker.input(b"hello world");
+        let result = checker.result();
+        assert_eq!(
+            result,
+            Some(Algorithm::Sha256)
+        )
+    }
+}
