@@ -4,6 +4,7 @@ use crate::checker::Checker;
 use crate::hash::Hash;
 use std::fmt;
 use std::error::Error;
+use hex;
 
 #[derive(Clone, Debug)]
 pub struct Integrity {
@@ -49,6 +50,13 @@ impl Integrity {
         checker.input(&data);
         checker.result()
     }
+    pub fn to_hex(&self) -> (Algorithm, String) {
+        let hash = self.hashes.get(0).unwrap();
+        (
+            hash.algorithm.clone(),
+            hex::encode(base64::decode(&hash.digest).unwrap())
+        )
+    }
 }
 
 #[derive(Debug)]
@@ -75,6 +83,18 @@ mod tests {
                 algorithm: Algorithm::Sha1,
                 digest: String::from("deadbeef=")
             }
+        )
+    }
+
+    #[test]
+    fn to_hex() {
+        let sri = Integrity::from(b"hello world", Algorithm::Sha1);
+        assert_eq!(
+            sri.to_hex(),
+            (
+                Algorithm::Sha1,
+                String::from("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed")
+            )
         )
     }
 }
