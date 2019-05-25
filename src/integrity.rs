@@ -34,10 +34,10 @@ impl std::str::FromStr for Integrity {
 
 impl Integrity {
     pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
-        let mut builder = Builder::new();
-        builder.algorithm(algorithm);
-        builder.input(&data);
-        builder.result()
+        Builder::new()
+            .algorithm(algorithm)
+            .chain(&data)
+            .result()
     }
     pub fn concat(&self, other: Integrity) -> Self {
         let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();

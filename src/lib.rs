@@ -25,12 +25,11 @@ let mut contents = String::new();
 file.read_to_string(&mut contents).unwrap();
 
 // Use a builder for more options + streaming data support.
-let mut builder = ssri::Builder::new();
-builder.algorithm(Algorithm::Sha512);
-builder.algorithm(Algorithm::Sha1);
-builder.input(&contents);
-// builder.input(...more stuff);
-let sri = builder.result();
+let sri = ssri::Builder::new()
+    .algorithm(Algorithm::Sha512)
+    .algorithm(Algorithm::Sha1)
+    .chain(&contents)
+    .result();
 
 // Or use from() for a simpler interface that works in most cases.
 let sri = Integrity::from(&contents, Algorithm::Sha256);

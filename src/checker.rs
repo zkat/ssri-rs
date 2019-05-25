@@ -9,13 +9,16 @@ pub struct Checker {
 
 impl Checker {
     pub fn new(sri: Integrity) -> Checker {
-        let mut builder = Builder::new();
         let hash = sri.hashes.get(0).unwrap();
-        builder.algorithm(hash.algorithm.clone());
+        let builder = Builder::new().algorithm(hash.algorithm.clone());
         Checker { sri, builder }
     }
     pub fn input<B: AsRef<[u8]>>(&mut self, data: B) {
         self.builder.input(data);
+    }
+    pub fn chain<B: AsRef<[u8]>>(mut self, data: B) -> Self {
+        self.builder.input(data);
+        self
     }
     pub fn result(self) -> Option<Algorithm> {
         let sri = self.builder.result();
@@ -42,9 +45,7 @@ mod tests {
     #[test]
     fn basic_test() {
         let sri = Integrity::from(b"hello world", Algorithm::Sha256);
-        let mut checker = Checker::new(sri);
-        checker.input(b"hello world");
-        let result = checker.result();
+        let result = Checker::new(sri).chain(b"hello world").result();
         assert_eq!(
             result,
             Some(Algorithm::Sha256)
