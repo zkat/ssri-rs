@@ -40,6 +40,9 @@ impl std::str::FromStr for Integrity {
 }
 
 impl Integrity {
+    pub fn pick_algorithm(&self) -> Algorithm {
+        self.hashes[0].algorithm.clone()
+    }
     pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
         Builder::new()
             .algorithm(algorithm)
@@ -48,7 +51,7 @@ impl Integrity {
     }
     pub fn concat(&self, other: Integrity) -> Self {
         let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();
-        hashes.sort_unstable();
+        hashes.sort();
         hashes.dedup();
         Integrity { hashes }
     }

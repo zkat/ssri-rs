@@ -99,7 +99,7 @@ impl Builder {
                 digest: data
             }
         }).collect::<Vec<Hash>>();
-        hashes.sort_unstable();
+        hashes.sort();
         Integrity { hashes }
     }
 }

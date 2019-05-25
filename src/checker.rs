@@ -22,8 +22,7 @@ pub struct Checker {
 
 impl Checker {
     pub fn new(sri: Integrity) -> Checker {
-        let hash = sri.hashes.get(0).unwrap();
-        let builder = Builder::new().algorithm(hash.algorithm.clone());
+        let builder = Builder::new().algorithm(sri.pick_algorithm());
         Checker { sri, builder }
     }
     pub fn input<B: AsRef<[u8]>>(&mut self, data: B) {
@@ -35,17 +34,11 @@ impl Checker {
     }
     pub fn result(self) -> Option<Algorithm> {
         let sri = self.builder.result();
-        let hash = sri.hashes.get(0).unwrap();
-        for h in self.sri.hashes.iter() {
-            if h.algorithm != hash.algorithm {
-                return None
-            } else if h == hash {
-                return Some(h.algorithm.clone())
-            } else {
-                continue
-            }
-        }
-        None
+        let algo = self.sri.pick_algorithm();
+        self.sri.hashes.iter()
+            .take_while(|h| h.algorithm == algo)
+            .find(|&h| *h == sri.hashes[0])
+            .map(|_| algo)
     }
 }
 
@@ -58,6 +51,17 @@ mod tests {
     #[test]
     fn basic_test() {
         let sri = Integrity::from(b"hello world", Algorithm::Sha256);
+        let result = Checker::new(sri).chain(b"hello world").result();
+        assert_eq!(
+            result,
+            Some(Algorithm::Sha256)
+        )
+    }
+    #[test]
+    fn multi_hash() {
+        let sri = "sha256-deadbeef".parse::<Integrity>().unwrap()
+            .concat(Integrity::from(b"hello world", Algorithm::Sha256));
+        eprintln!("\n{}", sri);
         let result = Checker::new(sri).chain(b"hello world").result();
         assert_eq!(
             result,
