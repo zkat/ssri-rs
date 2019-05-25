@@ -39,10 +39,12 @@ pub struct Builder {
 }
 
 impl Builder {
+    /// Creates a new hashing builder.
     pub fn new() -> Builder {
         Builder { hashers: vec!(), disturbed: false }
     }
 
+    /// Generate a hash for this algorithm. Can be called multiple times to generate an `Integrity` string with multiple entries.
     pub fn algorithm(mut self, algo: Algorithm) -> Self {
         if self.disturbed {
             panic!("Can't add new algorithms if Builder::input() has already been called");
@@ -56,6 +58,7 @@ impl Builder {
         self
     }
 
+    /// Add some data to this builder. All internal hashers will be updated for all configured `Algorithm`s.
     pub fn input<B: AsRef<[u8]>>(&mut self, input: B) {
         self.disturbed = true;
         for hasher in self.hashers.iter_mut() {
@@ -68,16 +71,19 @@ impl Builder {
         }
     }
 
+    /// Same as `Builder::input`, but allows chaining.
     pub fn chain<B: AsRef<[u8]>>(mut self, input: B) -> Self {
         self.input(&input);
         self
     }
 
+    /// Resets internal state for this builder.
     pub fn reset(&mut self) {
         self.hashers = vec!();
         self.disturbed = false;
     }
 
+    /// Generate a new `Integrity` from the inputted data and configured algorithms.
     pub fn result(self) -> Integrity {
         let mut hashes = self.hashers.into_iter().map(|h| {
             let (algorithm, data) = match h {

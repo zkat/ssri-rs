@@ -40,26 +40,31 @@ impl std::str::FromStr for Integrity {
 }
 
 impl Integrity {
+    /// Pick the most secure available `Algorithm` in this `Integrity`.
     pub fn pick_algorithm(&self) -> Algorithm {
         self.hashes[0].algorithm.clone()
     }
+    /// Create a new `Integrity` based on `data`. Use [`Builder`](struct.Builder.html) for more options.
     pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
         Builder::new()
             .algorithm(algorithm)
             .chain(&data)
             .result()
     }
+    /// Join together two `Integrity` instances. Hashes will be bucketed by algorithm but otherwise kept in the same order.
     pub fn concat(&self, other: Integrity) -> Self {
         let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();
         hashes.sort();
         hashes.dedup();
         Integrity { hashes }
     }
+    /// Check some data against this `Integrity`. For more options, use [`Checker`](struct.Checker.html). This method consumes `self`.
     pub fn check<B: AsRef<[u8]>>(self, data: B) -> Option<Algorithm> {
         let mut checker = Checker::new(self);
         checker.input(&data);
         checker.result()
     }
+    /// Converts the first `Hash` in this `Integrity` into its hex string format.
     pub fn to_hex(&self) -> (Algorithm, String) {
         let hash = self.hashes.get(0).unwrap();
         (

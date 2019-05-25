@@ -21,17 +21,21 @@ pub struct Checker {
 }
 
 impl Checker {
+    /// Creates a new `Checker` builder. Use this to verify chunked data.
     pub fn new(sri: Integrity) -> Checker {
         let builder = Builder::new().algorithm(sri.pick_algorithm());
         Checker { sri, builder }
     }
+    /// Add some data to the running checker.
     pub fn input<B: AsRef<[u8]>>(&mut self, data: B) {
         self.builder.input(data);
     }
+    /// Same as `Checker::input`, but allows chained calls.
     pub fn chain<B: AsRef<[u8]>>(mut self, data: B) -> Self {
         self.builder.input(data);
         self
     }
+    /// Returns the matching algorithm if the inputted data matches the input `Integrity`.
     pub fn result(self) -> Option<Algorithm> {
         let sri = self.builder.result();
         let algo = self.sri.pick_algorithm();

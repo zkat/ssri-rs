@@ -9,7 +9,7 @@ hashes.
 Parse a string as [`Integrity`](struct.Integrity.html) to convert it to a struct:
 ```
 # use ssri::Integrity;
-let source = String::from("sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==");
+let source = String::from("sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=");
 
 let parsed: Integrity = source.parse().unwrap();
 assert_eq!(parsed.to_string(), source)
