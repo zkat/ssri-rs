@@ -6,6 +6,13 @@ use std::fmt;
 use std::error::Error;
 use hex;
 
+/**
+Representation of a full [Subresource Integrity string](https://w3c.github.io/webappsec/specs/subresourceintegrity/).
+
+`Integrity` can be used for parsing and also includes convenience methods
+for shorthand versions of [`Builder`](struct.Builder.html) and
+[`Checker`](struct.Checker.html).
+*/
 #[derive(Clone, Debug)]
 pub struct Integrity {
     pub hashes: Vec<Hash>
@@ -59,6 +66,9 @@ impl Integrity {
     }
 }
 
+/**
+Error parsing an integrity string into an [`Integrity`](struct.Integrity.html).
+*/
 #[derive(Debug)]
 pub struct ParseIntegrityError {}
 impl fmt::Display for ParseIntegrityError {

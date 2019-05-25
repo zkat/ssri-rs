@@ -3,6 +3,12 @@ use crate::integrity::ParseIntegrityError;
 use std::cmp::Ordering;
 use std::fmt;
 
+/**
+Represents a single algorithm/digest pair.
+
+This is mostly internal, although users might interact with it directly on
+occasion.
+*/
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Hash {
     pub algorithm: Algorithm,

@@ -7,6 +7,7 @@ use sha2;
 use digest::Digest;
 use base64;
 
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone)]
 enum Hasher {
     Sha1(sha1::Sha1),
@@ -15,7 +16,23 @@ enum Hasher {
     Sha512(sha2::Sha512),
 }
 
-#[derive(Clone)]
+/**
+Builds a new [`Integrity`](struct.Integrity.html), allowing multiple algorithms and incremental input.
+
+# Examples
+
+```
+use ssri::{Algorithm, Builder};
+let contents = b"hello world";
+let sri = Builder::new()
+    .algorithm(Algorithm::Sha512)
+    .algorithm(Algorithm::Sha1)
+    .chain(&contents)
+    .result();
+```
+
+*/
+#[derive(Clone, Default)]
 pub struct Builder {
     hashers: Vec<Hasher>,
     disturbed: bool

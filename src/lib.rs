@@ -4,42 +4,36 @@ Integrity, is a Rust library for parsing, manipulating, serializing,
 generating, and verifying [Subresource Integrity](https://w3c.github.io/webappsec/specs/subresourceintegrity/)
 hashes.
 
-# Usage
+# Examples
 
-Parsing and serializing Subresource Integrity strings:
-```no_run
-let integrity = String::from("sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==");
+Parse a string as [`Integrity`](struct.Integrity.html) to convert it to a struct:
+```
+# use ssri::Integrity;
+let source = String::from("sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==");
 
-let parsed: ssri::Integrity = integrity.parse().unwrap();
-assert_eq!(parsed.to_string(), integrity)
+let parsed: Integrity = source.parse().unwrap();
+assert_eq!(parsed.to_string(), source)
 ```
 
 Generating a new hash from file data:
-```no_run
-# use ssri::{Integrity, Algorithm};
-# use std::fs::File;
-# use std::io::prelude::*;
-// Get file data...
-let mut file = File::open("foo.txt").unwrap();
-let mut contents = String::new();
-file.read_to_string(&mut contents).unwrap();
-
-// Use a builder for more options + streaming data support.
-let sri = ssri::Builder::new()
-    .algorithm(Algorithm::Sha512)
-    .algorithm(Algorithm::Sha1)
-    .chain(&contents)
-    .result();
-
-// Or use from() for a simpler interface that works in most cases.
-let sri = Integrity::from(&contents, Algorithm::Sha256);
-
-assert_eq!(sri.to_string(), "sha256-deadbeef");
-
-// Verify the data:
-assert_eq!(sri.check(&contents).unwrap(), Algorithm::Sha256);
 ```
+# use ssri::{Integrity, Algorithm};
+let sri = Integrity::from(b"hello world", Algorithm::Sha256);
+assert_eq!(sri.to_string(), "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=");
+```
+
+Verifying data against an SRI:
+```
+# use ssri::{Integrity, Algorithm};
+let sri = Integrity::from(b"hello world", Algorithm::Sha256);
+assert_eq!(sri.check(b"hello world").unwrap(), Algorithm::Sha256);
+```
+
+You can also use [`Builder`](struct.Builder.html) and [`Checker`](struct.Checker.html) to generate
+and check subresource integrity, respectively. These allow things like multiple algorithms, and
+incremental/streamed data input.
 */
+
 mod algorithm;
 mod hash;
 mod integrity;

@@ -2,6 +2,19 @@ use crate::algorithm::Algorithm;
 use crate::builder::Builder;
 use crate::integrity::Integrity;
 
+/**
+Check data against an [`Integrity`](struct.Integrity.html).
+
+# Examples
+
+```
+# use ssri::{Algorithm, Integrity, Checker};
+let data = b"hello world";
+let sri = Integrity::from(&data, Algorithm::Sha256);
+let checker = Checker::new(sri).chain(&data);
+assert_eq!(checker.result(), Some(Algorithm::Sha256));
+```
+*/
 pub struct Checker {
     sri: Integrity,
     builder: Builder

@@ -1,6 +1,14 @@
 use std::fmt;
 use crate::integrity::ParseIntegrityError;
 
+/**
+Valid algorithms for integrity strings.
+
+`Sha1` is a special case in this library -- it's not allowed by the
+current SRI spec, but it's useful enough that having first-class support
+makes sense. It should also be completely harmless to have in your strings
+if you do use it in a browser context.
+*/
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Algorithm {
     Sha512,
