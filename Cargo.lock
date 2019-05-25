@@ -92,7 +92,7 @@ dependencies = [
 
 [[package]]
 name = "ssri"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "base64 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "digest 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
