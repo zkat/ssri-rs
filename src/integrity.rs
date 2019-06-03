@@ -13,7 +13,7 @@ Representation of a full [Subresource Integrity string](https://w3c.github.io/we
 for shorthand versions of [`Builder`](struct.Builder.html) and
 [`Checker`](struct.Checker.html).
 */
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Integrity {
     pub hashes: Vec<Hash>
 }
