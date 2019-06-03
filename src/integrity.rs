@@ -1,10 +1,13 @@
+use std::fmt;
+use std::error::Error;
+
+use hex;
+use serde_derive::{Serialize, Deserialize};
+
 use crate::algorithm::Algorithm;
 use crate::builder::Builder;
 use crate::checker::Checker;
 use crate::hash::Hash;
-use std::fmt;
-use std::error::Error;
-use hex;
 
 /**
 Representation of a full [Subresource Integrity string](https://w3c.github.io/webappsec/specs/subresourceintegrity/).
@@ -13,7 +16,7 @@ Representation of a full [Subresource Integrity string](https://w3c.github.io/we
 for shorthand versions of [`Builder`](struct.Builder.html) and
 [`Checker`](struct.Checker.html).
 */
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Integrity {
     pub hashes: Vec<Hash>
 }
