@@ -4,7 +4,7 @@ use std::fmt;
 use serde_derive::{Serialize, Deserialize};
 
 use crate::algorithm::Algorithm;
-use crate::integrity::ParseIntegrityError;
+use crate::errors::Error;
 
 /**
 Represents a single algorithm/digest pair.
@@ -36,12 +36,12 @@ impl fmt::Display for Hash {
 }
 
 impl std::str::FromStr for Hash {
-    type Err = ParseIntegrityError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Hash, Self::Err> {
         let mut parsed = s.trim().split(|c| c == '-');
-        let algorithm = parsed.next().ok_or(ParseIntegrityError{})?.parse()?;
-        let digest = String::from(parsed.next().ok_or(ParseIntegrityError{})?);
+        let algorithm = parsed.next().ok_or(Error::ParseIntegrityError)?.parse()?;
+        let digest = String::from(parsed.next().ok_or(Error::ParseIntegrityError)?);
         Ok(Hash { algorithm, digest })
     }
 }

@@ -39,7 +39,9 @@ mod hash;
 mod integrity;
 mod builder;
 mod checker;
+mod errors;
 
+pub use errors::Error;
 pub use algorithm::Algorithm;
 pub use builder::Builder;
 pub use checker::Checker;

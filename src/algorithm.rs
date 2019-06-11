@@ -2,7 +2,7 @@ use std::fmt;
 
 use serde_derive::{Serialize, Deserialize};
 
-use crate::integrity::ParseIntegrityError;
+use crate::errors::Error;
 
 /**
 Valid algorithms for integrity strings.
@@ -27,7 +27,7 @@ impl fmt::Display for Algorithm {
 }
 
 impl std::str::FromStr for Algorithm {
-    type Err = ParseIntegrityError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Algorithm, Self::Err> {
         match s {
@@ -35,7 +35,7 @@ impl std::str::FromStr for Algorithm {
             "sha256" => Ok(Algorithm::Sha256),
             "sha384" => Ok(Algorithm::Sha384),
             "sha512" => Ok(Algorithm::Sha512),
-            _ => Err(ParseIntegrityError{})
+            _ => Err(Error::ParseIntegrityError)
         }
     }
 }

@@ -1,5 +1,4 @@
 use std::fmt;
-use std::error::Error;
 
 use hex;
 use serde_derive::{Serialize, Deserialize};
@@ -7,6 +6,7 @@ use serde_derive::{Serialize, Deserialize};
 use crate::algorithm::Algorithm;
 use crate::builder::Builder;
 use crate::checker::Checker;
+use crate::errors::Error;
 use crate::hash::Hash;
 
 /**
@@ -31,7 +31,7 @@ impl fmt::Display for Integrity {
 }
 
 impl std::str::FromStr for Integrity {
-    type Err = ParseIntegrityError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Integrity, Self::Err> {
         let hashes = String::from(s)
@@ -76,18 +76,6 @@ impl Integrity {
         )
     }
 }
-
-/**
-Error parsing an integrity string into an [`Integrity`](struct.Integrity.html).
-*/
-#[derive(Debug)]
-pub struct ParseIntegrityError {}
-impl fmt::Display for ParseIntegrityError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "failed to parse Subresource Integrity string")
-    }
-}
-impl Error for ParseIntegrityError {}
 
 #[cfg(test)]
 mod tests {
