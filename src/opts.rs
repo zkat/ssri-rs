@@ -22,9 +22,9 @@ Builds a new [`Integrity`](struct.Integrity.html), allowing multiple algorithms 
 # Examples
 
 ```
-use ssri::{Algorithm, Builder};
+use ssri::{Algorithm, IntegrityOpts};
 let contents = b"hello world";
-let sri = Builder::new()
+let sri = IntegrityOpts::new()
     .algorithm(Algorithm::Sha512)
     .algorithm(Algorithm::Sha1)
     .chain(&contents)
@@ -33,21 +33,21 @@ let sri = Builder::new()
 
 */
 #[derive(Clone, Default)]
-pub struct Builder {
+pub struct IntegrityOpts {
     hashers: Vec<Hasher>,
     disturbed: bool
 }
 
-impl Builder {
-    /// Creates a new hashing builder.
-    pub fn new() -> Builder {
-        Builder { hashers: vec!(), disturbed: false }
+impl IntegrityOpts {
+    /// Creates a new hashing IntegrityOpts.
+    pub fn new() -> IntegrityOpts {
+        IntegrityOpts { hashers: vec!(), disturbed: false }
     }
 
     /// Generate a hash for this algorithm. Can be called multiple times to generate an `Integrity` string with multiple entries.
     pub fn algorithm(mut self, algo: Algorithm) -> Self {
         if self.disturbed {
-            panic!("Can't add new algorithms if Builder::input() has already been called");
+            panic!("Can't add new algorithms if IntegrityOpts::input() has already been called");
         }
         self.hashers.push(match algo {
             Algorithm::Sha1 => Hasher::Sha1(sha1::Sha1::new()),
@@ -58,7 +58,7 @@ impl Builder {
         self
     }
 
-    /// Add some data to this builder. All internal hashers will be updated for all configured `Algorithm`s.
+    /// Add some data to this IntegrityOpts. All internal hashers will be updated for all configured `Algorithm`s.
     pub fn input<B: AsRef<[u8]>>(&mut self, input: B) {
         self.disturbed = true;
         for hasher in self.hashers.iter_mut() {
@@ -71,13 +71,13 @@ impl Builder {
         }
     }
 
-    /// Same as `Builder::input`, but allows chaining.
+    /// Same as `IntegrityOpts::input`, but allows chaining.
     pub fn chain<B: AsRef<[u8]>>(mut self, input: B) -> Self {
         self.input(&input);
         self
     }
 
-    /// Resets internal state for this builder.
+    /// Resets internal state for this IntegrityOpts.
     pub fn reset(&mut self) {
         self.hashers = vec!();
         self.disturbed = false;
@@ -110,7 +110,7 @@ impl Builder {
     }
 }
 
-impl digest::Input for Builder {
+impl digest::Input for IntegrityOpts {
     fn input<B: AsRef<[u8]>>(&mut self, input: B) {
         self.input(input)
     }
@@ -119,7 +119,7 @@ impl digest::Input for Builder {
     }
 }
 
-impl digest::Reset for Builder {
+impl digest::Reset for IntegrityOpts {
     fn reset(&mut self) {
         self.reset()
     }
@@ -127,12 +127,12 @@ impl digest::Reset for Builder {
 
 #[cfg(test)]
 mod tests {
-    use super::Builder;
+    use super::IntegrityOpts;
     use super::Algorithm;
 
     #[test]
     fn basic_test() {
-        let result = Builder::new()
+        let result = IntegrityOpts::new()
             .algorithm(Algorithm::Sha1)
             .algorithm(Algorithm::Sha256)
             .chain(b"hello world")

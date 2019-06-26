@@ -4,8 +4,8 @@ use hex;
 use serde_derive::{Serialize, Deserialize};
 
 use crate::algorithm::Algorithm;
-use crate::builder::Builder;
-use crate::checker::Checker;
+use crate::opts::IntegrityOpts;
+use crate::checker::IntegrityChecker;
 use crate::errors::Error;
 use crate::hash::Hash;
 
@@ -13,8 +13,8 @@ use crate::hash::Hash;
 Representation of a full [Subresource Integrity string](https://w3c.github.io/webappsec/specs/subresourceintegrity/).
 
 `Integrity` can be used for parsing and also includes convenience methods
-for shorthand versions of [`Builder`](struct.Builder.html) and
-[`Checker`](struct.Checker.html).
+for shorthand versions of [`IntegrityOpts`](struct.IntegrityOpts.html) and
+[`IntegrityChecker`](struct.IntegrityChecker.html).
 */
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Integrity {
@@ -47,10 +47,10 @@ impl Integrity {
     pub fn pick_algorithm(&self) -> Algorithm {
         self.hashes[0].algorithm.clone()
     }
-    /// Create a new `Integrity` based on `data`. Use [`Builder`](struct.Builder.html) for more options.
-    pub fn from<B: AsRef<[u8]>>(data: B, algorithm: Algorithm) -> Integrity {
-        Builder::new()
-            .algorithm(algorithm)
+    /// Create a new `Integrity` based on `data`. Use [`IntegrityOpts`](struct.IntegrityOpts.html) for more options.
+    pub fn from<B: AsRef<[u8]>>(data: B) -> Integrity {
+        IntegrityOpts::new()
+            .algorithm(Algorithm::Sha256)
             .chain(&data)
             .result()
     }
@@ -61,9 +61,9 @@ impl Integrity {
         hashes.dedup();
         Integrity { hashes }
     }
-    /// Check some data against this `Integrity`. For more options, use [`Checker`](struct.Checker.html). This method consumes `self`.
-    pub fn check<B: AsRef<[u8]>>(self, data: B) -> Option<Algorithm> {
-        let mut checker = Checker::new(self);
+    /// Check some data against this `Integrity`. For more options, use [`Checker`](struct.Checker.html).
+    pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Option<Algorithm> {
+        let mut checker = IntegrityChecker::new(&self);
         checker.input(&data);
         checker.result()
     }
@@ -97,12 +97,12 @@ mod tests {
 
     #[test]
     fn to_hex() {
-        let sri = Integrity::from(b"hello world", Algorithm::Sha1);
+        let sri = Integrity::from(b"hello world");
         assert_eq!(
             sri.to_hex(),
             (
-                Algorithm::Sha1,
-                String::from("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed")
+                Algorithm::Sha256,
+                String::from("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9")
             )
         )
     }
