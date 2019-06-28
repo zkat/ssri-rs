@@ -75,13 +75,26 @@ impl Integrity {
             hex::encode(base64::decode(&hash.digest).unwrap())
         )
     }
+    /// Compares `self` against a given SRI to see if there's a match. The deciding algorithm is determined by `other`.
+    pub fn matches(&self, other: &Self) -> Option<Algorithm> {
+        let algo = other.pick_algorithm();
+        self
+            .hashes
+            .iter()
+            .filter(|h| h.algorithm == algo)
+            .find(|&h| {
+                other.hashes
+                    .iter()
+                    .filter(|i| i.algorithm == algo)
+                    .any(|i| h == i)
+            })
+            .map(|h| h.algorithm)
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::Hash;
-    use super::Algorithm;
-    use super::Integrity;
+    use super::{Hash, Algorithm, Integrity, IntegrityOpts};
 
     #[test]
     fn parse() {
@@ -104,6 +117,29 @@ mod tests {
                 Algorithm::Sha256,
                 String::from("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9")
             )
+        )
+    }
+
+    #[test]
+    fn matches() {
+        let sri1 = IntegrityOpts::new()
+            .algorithm(Algorithm::Sha512)
+            .algorithm(Algorithm::Sha256)
+            .chain(b"hello world")
+            .result();
+        let sri2 = Integrity::from(b"hello world");
+        let sri3 = Integrity::from(b"goodbye world");
+        assert_eq!(
+            sri1.matches(&sri2),
+            Some(Algorithm::Sha256)
+        );
+        assert_eq!(
+            sri1.matches(&sri3),
+            None
+        );
+        assert_eq!(
+            sri2.matches(&sri1),
+            None
         )
     }
 }
