@@ -45,7 +45,7 @@ impl std::str::FromStr for Integrity {
 impl Integrity {
     /// Pick the most secure available `Algorithm` in this `Integrity`.
     pub fn pick_algorithm(&self) -> Algorithm {
-        self.hashes[0].algorithm.clone()
+        self.hashes[0].algorithm
     }
     /// Create a new `Integrity` based on `data`. Use [`IntegrityOpts`](struct.IntegrityOpts.html) for more options.
     pub fn from<B: AsRef<[u8]>>(data: B) -> Integrity {
@@ -71,7 +71,7 @@ impl Integrity {
     pub fn to_hex(&self) -> (Algorithm, String) {
         let hash = self.hashes.get(0).unwrap();
         (
-            hash.algorithm.clone(),
+            hash.algorithm,
             hex::encode(base64::decode(&hash.digest).unwrap())
         )
     }

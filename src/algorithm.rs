@@ -12,7 +12,7 @@ current SRI spec, but it's useful enough that having first-class support
 makes sense. It should also be completely harmless to have in your strings
 if you do use it in a browser context.
 */
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Algorithm {
     Sha512,
     Sha384,
