@@ -11,21 +11,21 @@ Check data against an [`Integrity`](struct.Integrity.html).
 # use ssri::{Algorithm, Integrity, IntegrityChecker};
 let data = b"hello world";
 let sri = Integrity::from(&data);
-let checker = IntegrityChecker::new(&sri).chain(&data);
+let checker = IntegrityChecker::new(sri).chain(&data);
 assert_eq!(checker.result(), Some(Algorithm::Sha256));
 ```
 */
-pub struct IntegrityChecker<'a> {
-    sri: &'a Integrity,
+pub struct IntegrityChecker {
+    sri: Integrity,
     builder: IntegrityOpts
 }
 
-impl<'a> IntegrityChecker<'a> {
+impl IntegrityChecker {
     /// Creates a new `IntegrityChecker` builder. Use this to verify chunked
     /// data.
-    pub fn new(sri: &'a Integrity) -> IntegrityChecker<'a> {
+    pub fn new(sri: Integrity) -> IntegrityChecker {
         let builder = IntegrityOpts::new().algorithm(sri.pick_algorithm());
-        IntegrityChecker { sri: &sri, builder }
+        IntegrityChecker { sri, builder }
     }
     /// Add some data to the running checker.
     pub fn input<B: AsRef<[u8]>>(&mut self, data: B) {
@@ -56,7 +56,7 @@ mod tests {
     #[test]
     fn basic_test() {
         let sri = Integrity::from(b"hello world");
-        let result = IntegrityChecker::new(&sri).chain(b"hello world").result();
+        let result = IntegrityChecker::new(sri).chain(b"hello world").result();
         assert_eq!(
             result,
             Some(Algorithm::Sha256)
@@ -67,7 +67,7 @@ mod tests {
         let sri = "sha256-deadbeef".parse::<Integrity>().unwrap()
             .concat(Integrity::from(b"hello world"));
         eprintln!("\n{}", sri);
-        let result = IntegrityChecker::new(&sri).chain(b"hello world").result();
+        let result = IntegrityChecker::new(sri).chain(b"hello world").result();
         assert_eq!(
             result,
             Some(Algorithm::Sha256)

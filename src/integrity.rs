@@ -63,7 +63,7 @@ impl Integrity {
     }
     /// Check some data against this `Integrity`. For more options, use [`Checker`](struct.Checker.html).
     pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Option<Algorithm> {
-        let mut checker = IntegrityChecker::new(&self);
+        let mut checker = IntegrityChecker::new(self.clone());
         checker.input(&data);
         checker.result()
     }
