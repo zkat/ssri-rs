@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "licensezero": [
+    {
+      "agentSignature": "de1c7e969c9e3e034bc376ce9dbaabdbf5a7c6f9a8a1e0c93a81742a7a8846153308b853b991bc430fd1fa5ca34a56c9579b1b27970df1cabf2317710411180b",
+      "license": {
+        "homepage": "https://github.com/zkat/ssri-rs",
+        "jurisdiction": "US-CA",
+        "name": "Kat Marchán",
+        "projectID": "76b8e949-a561-44af-b955-a35e6ffe467e",
+        "publicKey": "5f60082194dc6b4a3971fa7397be663c81313bcaa489af96cfdef1c413b1b01a",
+        "terms": "parity",
+        "version": "6.0.0"
+      },
+      "licensorSignature": "8fe5f98642f320bc7177be5428e2cc7a2ad379066714d385d7e3244e34d140f28bae13398089b223dc9446f58b26dab73a4e28893da53d28c4756c77ef78e80e"
+    }
+  ]
+}

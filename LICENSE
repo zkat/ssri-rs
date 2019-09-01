@@ -1,0 +1,59 @@
+The Parity Public License 6.0.0
+
+Contributor: Kat Marchán
+
+Source Code: https://github.com/zkat/ssri-rs
+
+This license lets you use and share this software for free, as
+long as you contribute software you make with it. Specifically:
+
+If you follow the rules below, you may do everything with this
+software that would otherwise infringe either the contributor's
+copyright in it, any patent claim the contributor can license,
+or both.
+
+1. Contribute changes and additions you make to this software.
+
+2. If you combine this software with other software, contribute
+   that other software.
+
+3. Contribute software you develop, deploy, monitor, or run with
+   this software.
+
+4. Ensure everyone who gets a copy of this software from you, in
+   source code or any other form, gets the text of this license
+   and the contributor and source code lines above.
+
+5. Do not make any legal claim against anyone accusing this
+   software, with or without changes, alone or with other
+   software, of infringing any patent claim.
+
+To contribute software, publish all its source code, in the
+preferred form for making changes, through a freely accessible
+distribution system widely used for similar source code, and
+license contributions not already licensed to the public on terms
+as permissive as this license accordingly.
+
+You are excused for unknowingly breaking 1, 2, or 3 if you
+contribute as required, or stop doing anything requiring this
+license, within 30 days of learning you broke the rule.
+
+**As far as the law allows, this software comes as is, without
+any warranty, and the contributor will not be liable to anyone
+for any damages related to this software or this license, for any
+kind of legal claim.**
+
+
+---
+
+Licensor Signature (Ed25519):
+
+41a412caba1f220afaf9e8c27175b7b2dabd6dc3a101d23c3bccbb2c1e4e0cc8
+18a78619764243ada443a9d3609f31d542fbf62dc5c23e25a7bcdaf7b56de10a
+
+---
+
+Agent Signature (Ed25519):
+
+e8956dc07ac75da3cf544129c64dba7a8d6ea6abd1654660350f8857d79631cc
+6e63a2eef1f5325518e648af12dd932efb30fc7c2c826ce1da2c8d2a0257560a
