@@ -4,7 +4,7 @@ version = "3.0.0"
 authors = ["Kat Marchán <kzm@zkat.tech>"]
 edition = "2018"
 description = "Various utilities for handling Subresource Integrity."
-license = "MIT OR Apache-2.0"
+license = "MPL-2.0"
 repository = "https://github.com/zkat/ssri-rs"
 homepage = "https://github.com/zkat/ssri-rs"
 
