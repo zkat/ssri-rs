@@ -1,5 +1,5 @@
 [clog]
-repository = "https://github.com/zkat/cacache-rs"
+repository = "https://github.com/zkat/ssri-rs"
 subtitle = ""
 changelog = "CHANGELOG.md"
 from-latest-tag = true
