@@ -1,6 +1,6 @@
 [package]
 name = "ssri"
-version = "4.1.0"
+version = "5.0.0"
 authors = ["Kat Marchán <kzm@zkat.tech>"]
 edition = "2018"
 description = "Various utilities for handling Subresource Integrity."
