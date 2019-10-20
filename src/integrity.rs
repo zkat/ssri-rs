@@ -39,16 +39,26 @@ impl std::str::FromStr for Integrity {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Integrity, Self::Err> {
-        let hashes = String::from(s)
+        let mut hashes = String::from(s)
             .split_whitespace()
             .map(|x| x.parse())
             .collect::<Result<Vec<Hash>, Self::Err>>()?;
+        hashes.sort();
         Ok(Integrity { hashes })
     }
 }
 
 impl Integrity {
     /// Pick the most secure available `Algorithm` in this `Integrity`.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::{Integrity, Algorithm};
+    ///
+    /// let sri: Integrity = "sha1-deadbeef sha256-badc0ffee".parse().unwrap();
+    /// let algorithm = sri.pick_algorithm();
+    /// assert_eq!(algorithm, Algorithm::Sha256);
+    /// ```
     pub fn pick_algorithm(&self) -> Algorithm {
         self.hashes[0].algorithm
     }
