@@ -7,6 +7,10 @@ description = "Various utilities for handling Subresource Integrity."
 license = "MPL-2.0"
 repository = "https://github.com/zkat/ssri-rs"
 homepage = "https://github.com/zkat/ssri-rs"
+readme = "README.md"
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 sha2 = "0.8.0"
