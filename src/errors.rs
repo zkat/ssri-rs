@@ -2,10 +2,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-use failure::Fail;
+use thiserror::Error;
 
-#[derive(Fail, Debug)]
+#[derive(Error, Debug)]
 pub enum Error {
-    #[fail(display = "failed to parse subresource integrity string")]
+    #[error("failed to parse subresource integrity string")]
     ParseIntegrityError,
 }
