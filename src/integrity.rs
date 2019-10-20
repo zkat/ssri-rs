@@ -15,6 +15,16 @@ Representation of a full [Subresource Integrity string](https://w3c.github.io/we
 `Integrity` can be used for parsing and also includes convenience methods
 for shorthand versions of [`IntegrityOpts`](struct.IntegrityOpts.html) and
 [`IntegrityChecker`](struct.IntegrityChecker.html).
+
+# Example
+
+```
+# use ssri::Integrity;
+let source = "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=";
+
+let parsed: Integrity = source.parse().unwrap();
+assert_eq!(parsed.to_string(), source);
+```
 */
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Integrity {
@@ -38,6 +48,14 @@ impl fmt::Display for Integrity {
 impl std::str::FromStr for Integrity {
     type Err = Error;
 
+    /// Parses a string into an Integrity instance.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::Integrity;
+    /// let sri: Integrity = "sha256-deadbeef".parse().unwrap();
+    /// assert_eq!(sri.to_string(), String::from("sha256-deadbeef"));
+    /// ```
     fn from_str(s: &str) -> Result<Integrity, Self::Err> {
         let mut hashes = String::from(s)
             .split_whitespace()
@@ -62,27 +80,70 @@ impl Integrity {
     pub fn pick_algorithm(&self) -> Algorithm {
         self.hashes[0].algorithm
     }
-    /// Create a new `Integrity` based on `data`. Use [`IntegrityOpts`](struct.IntegrityOpts.html) for more options.
+
+    /// Create a new `Integrity` based on `data`. Use
+    /// [`IntegrityOpts`](struct.IntegrityOpts.html) for more options.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::Integrity;
+    /// let sri = Integrity::from(b"hello");
+    /// assert_eq!(sri.to_string(), "sha256-LPJNul+wow4m6DsqxbninhsWHlwfp0JecwQzYpOLmCQ=".to_owned());
+    /// ```
     pub fn from<B: AsRef<[u8]>>(data: B) -> Integrity {
         IntegrityOpts::new()
             .algorithm(Algorithm::Sha256)
             .chain(&data)
             .result()
     }
-    /// Join together two `Integrity` instances. Hashes will be bucketed by algorithm but otherwise kept in the same order.
+
+    /// Join together two `Integrity` instances. Hashes will be grouped and
+    /// sorted by algorithm but otherwise kept in the same order.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::Integrity;
+    /// let sri1: Integrity = "sha256-deadbeef".parse().unwrap();
+    /// let sri2: Integrity = "sha256-badc0ffee".parse().unwrap();
+    /// let sri3 = sri1.concat(sri2);
+    /// assert_eq!(sri3.to_string(), "sha256-deadbeef sha256-badc0ffee".to_owned());
+    /// ```
     pub fn concat(&self, other: Integrity) -> Self {
         let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();
         hashes.sort();
         hashes.dedup();
         Integrity { hashes }
     }
-    /// Check some data against this `Integrity`. For more options, use [`Checker`](struct.Checker.html).
+
+    /// Check some data against this `Integrity`. For more options, use
+    /// [`Checker`](struct.Checker.html).
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::{Algorithm, Integrity};
+    ///
+    /// let sri = Integrity::from(b"hello");
+    /// let algorithm = sri.check(b"hello").unwrap();
+    /// assert_eq!(algorithm, Algorithm::Sha256);
+    /// ```
     pub fn check<B: AsRef<[u8]>>(&self, data: B) -> Result<Algorithm, Error> {
         let mut checker = IntegrityChecker::new(self.clone());
         checker.input(&data);
         checker.result()
     }
-    /// Converts the first `Hash` in this `Integrity` into its hex string format.
+
+    /// Converts the first `Hash` in this `Integrity` into its hex string
+    /// format.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::{Algorithm, Integrity};
+    ///
+    /// let sri = Integrity::from(b"hello");
+    /// let (algo, hex) = sri.to_hex();
+    /// assert_eq!(algo, Algorithm::Sha256);
+    /// assert_eq!(hex, "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824".to_owned());
+    /// ```
     pub fn to_hex(&self) -> (Algorithm, String) {
         let hash = self.hashes.get(0).unwrap();
         (
@@ -90,7 +151,19 @@ impl Integrity {
             hex::encode(base64::decode(&hash.digest).unwrap()),
         )
     }
-    /// Compares `self` against a given SRI to see if there's a match. The deciding algorithm is determined by `other`.
+
+    /// Compares `self` against a given SRI to see if there's a match. The
+    /// deciding algorithm is determined by `other`.
+    ///
+    /// # Example
+    /// ```
+    /// use ssri::{Algorithm, Integrity};
+    ///
+    /// let sri1 = Integrity::from(b"hello");
+    /// let sri2 = Integrity::from(b"hello").concat(Integrity::from(b"world"));
+    /// let m = sri1.matches(&sri2);
+    /// assert_eq!(m, Some(Algorithm::Sha256));
+    /// ```
     pub fn matches(&self, other: &Self) -> Option<Algorithm> {
         let algo = other.pick_algorithm();
         self.hashes
