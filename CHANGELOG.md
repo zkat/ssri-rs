@@ -1,3 +1,20 @@
+<a name="5.0.0"></a>
+
+## 5.0.0 (2019-10-20)
+
+#### Bug Fixes
+
+- **integrity:** sort hashes after parse ([c9f92a00](https://github.com/zkat/ssri-rs/commit/c9f92a00cc183c65e7fd48c39fe95b09236d65da))
+
+#### Features
+
+- **errors:** More detailed errors ([6d5cba7e](https://github.com/zkat/ssri-rs/commit/6d5cba7ebb731a8da1717976ccc957671423bc52))
+- **license:** switch license to Parity + Apache-2.0 ([adac5dc0](https://github.com/zkat/ssri-rs/commit/adac5dc04f33ac8efc3dadf7ab75c4c67bfccf5c))
+
+#### Breaking Changes
+
+- **errors:** More detailed errors ([6d5cba7e](https://github.com/zkat/ssri-rs/commit/6d5cba7ebb731a8da1717976ccc957671423bc52))
+
 <a name="4.1.0"></a>
 
 ## 4.1.0 (2019-10-20)
