@@ -39,7 +39,7 @@ impl std::str::FromStr for Algorithm {
             "sha256" => Ok(Algorithm::Sha256),
             "sha384" => Ok(Algorithm::Sha384),
             "sha512" => Ok(Algorithm::Sha512),
-            _ => Err(Error::ParseIntegrityError),
+            _ => Err(Error::ParseIntegrityError(s.into())),
         }
     }
 }

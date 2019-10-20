@@ -44,8 +44,11 @@ impl std::str::FromStr for Hash {
 
     fn from_str(s: &str) -> Result<Hash, Self::Err> {
         let mut parsed = s.trim().split(|c| c == '-');
-        let algorithm = parsed.next().ok_or(Error::ParseIntegrityError)?.parse()?;
-        let digest = String::from(parsed.next().ok_or(Error::ParseIntegrityError)?);
+        let algorithm = parsed
+            .next()
+            .ok_or(Error::ParseIntegrityError(s.into()))?
+            .parse()?;
+        let digest = String::from(parsed.next().ok_or(Error::ParseIntegrityError(s.into()))?);
         Ok(Hash { algorithm, digest })
     }
 }

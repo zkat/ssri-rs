@@ -5,6 +5,7 @@
 use crate::algorithm::Algorithm;
 use crate::integrity::Integrity;
 use crate::opts::IntegrityOpts;
+use crate::Error;
 
 /**
 Check data against an [`Integrity`](struct.Integrity.html).
@@ -16,7 +17,7 @@ Check data against an [`Integrity`](struct.Integrity.html).
 let data = b"hello world";
 let sri = Integrity::from(&data);
 let checker = IntegrityChecker::new(sri).chain(&data);
-assert_eq!(checker.result(), Some(Algorithm::Sha256));
+assert_eq!(checker.result().unwrap(), Algorithm::Sha256);
 ```
 */
 pub struct IntegrityChecker {
@@ -41,15 +42,17 @@ impl IntegrityChecker {
         self
     }
     /// Returns the matching algorithm if the inputted data matches the input `Integrity`.
-    pub fn result(self) -> Option<Algorithm> {
+    pub fn result(self) -> Result<Algorithm, Error> {
         let sri = self.builder.result();
         let algo = self.sri.pick_algorithm();
-        self.sri
+        let wanted = self.sri;
+        wanted
             .hashes
             .iter()
             .take_while(|h| h.algorithm == algo)
             .find(|&h| *h == sri.hashes[0])
             .map(|_| algo)
+            .ok_or_else(|| Error::IntegrityCheckError(wanted, sri))
     }
 }
 
@@ -63,7 +66,7 @@ mod tests {
     fn basic_test() {
         let sri = Integrity::from(b"hello world");
         let result = IntegrityChecker::new(sri).chain(b"hello world").result();
-        assert_eq!(result, Some(Algorithm::Sha256))
+        assert_eq!(result.unwrap(), Algorithm::Sha256)
     }
     #[test]
     fn multi_hash() {
@@ -73,6 +76,6 @@ mod tests {
             .concat(Integrity::from(b"hello world"));
         eprintln!("\n{}", sri);
         let result = IntegrityChecker::new(sri).chain(b"hello world").result();
-        assert_eq!(result, Some(Algorithm::Sha256))
+        assert_eq!(result.unwrap(), Algorithm::Sha256)
     }
 }
