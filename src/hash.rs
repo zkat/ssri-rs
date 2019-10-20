@@ -5,7 +5,7 @@
 use std::cmp::Ordering;
 use std::fmt;
 
-use serde_derive::{Serialize, Deserialize};
+use serde_derive::{Deserialize, Serialize};
 
 use crate::algorithm::Algorithm;
 use crate::errors::Error;
@@ -19,7 +19,7 @@ occasion.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Hash {
     pub algorithm: Algorithm,
-    pub digest: String
+    pub digest: String,
 }
 
 impl PartialOrd for Hash {
@@ -52,16 +52,19 @@ impl std::str::FromStr for Hash {
 
 #[cfg(test)]
 mod tests {
-    use super::Hash;
     use super::Algorithm;
+    use super::Hash;
 
     #[test]
     fn hash_stringify() {
         assert_eq!(
-            format!("{}", Hash {
-                algorithm: Algorithm::Sha256,
-                digest: String::from("deadbeef==")
-            }),
+            format!(
+                "{}",
+                Hash {
+                    algorithm: Algorithm::Sha256,
+                    digest: String::from("deadbeef==")
+                }
+            ),
             "sha256-deadbeef=="
         )
     }
@@ -89,39 +92,42 @@ mod tests {
         let mut arr = [
             Hash {
                 algorithm: Algorithm::Sha1,
-                digest: String::from("foo==")
+                digest: String::from("foo=="),
             },
             Hash {
                 algorithm: Algorithm::Sha256,
-                digest: String::from("foo==")
+                digest: String::from("foo=="),
             },
             Hash {
                 algorithm: Algorithm::Sha384,
-                digest: String::from("foo==")
+                digest: String::from("foo=="),
             },
             Hash {
                 algorithm: Algorithm::Sha512,
-                digest: String::from("foo==")
-            }
+                digest: String::from("foo=="),
+            },
         ];
         arr.sort_unstable();
-        assert_eq!(arr, [
-            Hash {
-                algorithm: Algorithm::Sha512,
-                digest: String::from("foo==")
-            },
-            Hash {
-                algorithm: Algorithm::Sha384,
-                digest: String::from("foo==")
-            },
-            Hash {
-                algorithm: Algorithm::Sha256,
-                digest: String::from("foo==")
-            },
-            Hash {
-                algorithm: Algorithm::Sha1,
-                digest: String::from("foo==")
-            }
-        ])
+        assert_eq!(
+            arr,
+            [
+                Hash {
+                    algorithm: Algorithm::Sha512,
+                    digest: String::from("foo==")
+                },
+                Hash {
+                    algorithm: Algorithm::Sha384,
+                    digest: String::from("foo==")
+                },
+                Hash {
+                    algorithm: Algorithm::Sha256,
+                    digest: String::from("foo==")
+                },
+                Hash {
+                    algorithm: Algorithm::Sha1,
+                    digest: String::from("foo==")
+                }
+            ]
+        )
     }
 }

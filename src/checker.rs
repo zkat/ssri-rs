@@ -3,8 +3,8 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 use crate::algorithm::Algorithm;
-use crate::opts::IntegrityOpts;
 use crate::integrity::Integrity;
+use crate::opts::IntegrityOpts;
 
 /**
 Check data against an [`Integrity`](struct.Integrity.html).
@@ -21,7 +21,7 @@ assert_eq!(checker.result(), Some(Algorithm::Sha256));
 */
 pub struct IntegrityChecker {
     sri: Integrity,
-    builder: IntegrityOpts
+    builder: IntegrityOpts,
 }
 
 impl IntegrityChecker {
@@ -44,7 +44,9 @@ impl IntegrityChecker {
     pub fn result(self) -> Option<Algorithm> {
         let sri = self.builder.result();
         let algo = self.sri.pick_algorithm();
-        self.sri.hashes.iter()
+        self.sri
+            .hashes
+            .iter()
             .take_while(|h| h.algorithm == algo)
             .find(|&h| *h == sri.hashes[0])
             .map(|_| algo)
@@ -53,28 +55,24 @@ impl IntegrityChecker {
 
 #[cfg(test)]
 mod tests {
-    use super::IntegrityChecker;
-    use super::Integrity;
     use super::Algorithm;
+    use super::Integrity;
+    use super::IntegrityChecker;
 
     #[test]
     fn basic_test() {
         let sri = Integrity::from(b"hello world");
         let result = IntegrityChecker::new(sri).chain(b"hello world").result();
-        assert_eq!(
-            result,
-            Some(Algorithm::Sha256)
-        )
+        assert_eq!(result, Some(Algorithm::Sha256))
     }
     #[test]
     fn multi_hash() {
-        let sri = "sha256-deadbeef".parse::<Integrity>().unwrap()
+        let sri = "sha256-deadbeef"
+            .parse::<Integrity>()
+            .unwrap()
             .concat(Integrity::from(b"hello world"));
         eprintln!("\n{}", sri);
         let result = IntegrityChecker::new(sri).chain(b"hello world").result();
-        assert_eq!(
-            result,
-            Some(Algorithm::Sha256)
-        )
+        assert_eq!(result, Some(Algorithm::Sha256))
     }
 }

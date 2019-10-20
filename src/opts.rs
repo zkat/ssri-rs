@@ -2,10 +2,10 @@ use crate::algorithm::Algorithm;
 use crate::hash::Hash;
 use crate::integrity::Integrity;
 
+use base64;
+use digest::Digest;
 use sha1;
 use sha2;
-use digest::Digest;
-use base64;
 
 #[allow(clippy::enum_variant_names)]
 #[derive(Clone)]
@@ -35,13 +35,16 @@ let sri = IntegrityOpts::new()
 #[derive(Clone, Default)]
 pub struct IntegrityOpts {
     hashers: Vec<Hasher>,
-    disturbed: bool
+    disturbed: bool,
 }
 
 impl IntegrityOpts {
     /// Creates a new hashing IntegrityOpts.
     pub fn new() -> IntegrityOpts {
-        IntegrityOpts { hashers: vec!(), disturbed: false }
+        IntegrityOpts {
+            hashers: vec![],
+            disturbed: false,
+        }
     }
 
     /// Generate a hash for this algorithm. Can be called multiple times to generate an `Integrity` string with multiple entries.
@@ -79,32 +82,28 @@ impl IntegrityOpts {
 
     /// Resets internal state for this IntegrityOpts.
     pub fn reset(&mut self) {
-        self.hashers = vec!();
+        self.hashers = vec![];
         self.disturbed = false;
     }
 
     /// Generate a new `Integrity` from the inputted data and configured algorithms.
     pub fn result(self) -> Integrity {
-        let mut hashes = self.hashers.into_iter().map(|h| {
-            let (algorithm, data) = match h {
-                Hasher::Sha1(h) => (
-                    Algorithm::Sha1, base64::encode(&h.result())
-                ),
-                Hasher::Sha256(h) => (
-                    Algorithm::Sha256, base64::encode(&h.result())
-                ),
-                Hasher::Sha384(h) => (
-                    Algorithm::Sha384, base64::encode(&h.result())
-                ),
-                Hasher::Sha512(h) => (
-                    Algorithm::Sha512, base64::encode(&h.result())
-                ),
-            };
-            Hash {
-                algorithm,
-                digest: data
-            }
-        }).collect::<Vec<Hash>>();
+        let mut hashes = self
+            .hashers
+            .into_iter()
+            .map(|h| {
+                let (algorithm, data) = match h {
+                    Hasher::Sha1(h) => (Algorithm::Sha1, base64::encode(&h.result())),
+                    Hasher::Sha256(h) => (Algorithm::Sha256, base64::encode(&h.result())),
+                    Hasher::Sha384(h) => (Algorithm::Sha384, base64::encode(&h.result())),
+                    Hasher::Sha512(h) => (Algorithm::Sha512, base64::encode(&h.result())),
+                };
+                Hash {
+                    algorithm,
+                    digest: data,
+                }
+            })
+            .collect::<Vec<Hash>>();
         hashes.sort();
         Integrity { hashes }
     }
@@ -127,8 +126,8 @@ impl digest::Reset for IntegrityOpts {
 
 #[cfg(test)]
 mod tests {
-    use super::IntegrityOpts;
     use super::Algorithm;
+    use super::IntegrityOpts;
 
     #[test]
     fn basic_test() {

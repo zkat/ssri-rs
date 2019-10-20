@@ -41,15 +41,15 @@ incremental/streamed data input.
 */
 
 mod algorithm;
+mod checker;
+mod errors;
 mod hash;
 mod integrity;
 mod opts;
-mod checker;
-mod errors;
 
-pub use errors::Error;
 pub use algorithm::Algorithm::{self, *};
-pub use opts::IntegrityOpts;
 pub use checker::IntegrityChecker;
+pub use errors::Error;
 pub use hash::Hash;
 pub use integrity::Integrity;
+pub use opts::IntegrityOpts;

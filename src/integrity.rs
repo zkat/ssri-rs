@@ -5,13 +5,13 @@
 use std::fmt;
 
 use hex;
-use serde_derive::{Serialize, Deserialize};
+use serde_derive::{Deserialize, Serialize};
 
 use crate::algorithm::Algorithm;
-use crate::opts::IntegrityOpts;
 use crate::checker::IntegrityChecker;
 use crate::errors::Error;
 use crate::hash::Hash;
+use crate::opts::IntegrityOpts;
 
 /**
 Representation of a full [Subresource Integrity string](https://w3c.github.io/webappsec/specs/subresourceintegrity/).
@@ -22,15 +22,20 @@ for shorthand versions of [`IntegrityOpts`](struct.IntegrityOpts.html) and
 */
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Integrity {
-    pub hashes: Vec<Hash>
+    pub hashes: Vec<Hash>,
 }
 
 impl fmt::Display for Integrity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.hashes.iter()
-            .map(|h| h.to_string())
-            .collect::<Vec<String>>()
-            .join(" "))
+        write!(
+            f,
+            "{}",
+            self.hashes
+                .iter()
+                .map(|h| h.to_string())
+                .collect::<Vec<String>>()
+                .join(" ")
+        )
     }
 }
 
@@ -76,18 +81,18 @@ impl Integrity {
         let hash = self.hashes.get(0).unwrap();
         (
             hash.algorithm,
-            hex::encode(base64::decode(&hash.digest).unwrap())
+            hex::encode(base64::decode(&hash.digest).unwrap()),
         )
     }
     /// Compares `self` against a given SRI to see if there's a match. The deciding algorithm is determined by `other`.
     pub fn matches(&self, other: &Self) -> Option<Algorithm> {
         let algo = other.pick_algorithm();
-        self
-            .hashes
+        self.hashes
             .iter()
             .filter(|h| h.algorithm == algo)
             .find(|&h| {
-                other.hashes
+                other
+                    .hashes
                     .iter()
                     .filter(|i| i.algorithm == algo)
                     .any(|i| h == i)
@@ -98,7 +103,7 @@ impl Integrity {
 
 #[cfg(test)]
 mod tests {
-    use super::{Hash, Algorithm, Integrity, IntegrityOpts};
+    use super::{Algorithm, Hash, Integrity, IntegrityOpts};
 
     #[test]
     fn parse() {
@@ -133,17 +138,8 @@ mod tests {
             .result();
         let sri2 = Integrity::from(b"hello world");
         let sri3 = Integrity::from(b"goodbye world");
-        assert_eq!(
-            sri1.matches(&sri2),
-            Some(Algorithm::Sha256)
-        );
-        assert_eq!(
-            sri1.matches(&sri3),
-            None
-        );
-        assert_eq!(
-            sri2.matches(&sri1),
-            None
-        )
+        assert_eq!(sri1.matches(&sri2), Some(Algorithm::Sha256));
+        assert_eq!(sri1.matches(&sri3), None);
+        assert_eq!(sri2.matches(&sri1), None)
     }
 }

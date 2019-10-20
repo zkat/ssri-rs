@@ -4,7 +4,7 @@
 
 use std::fmt;
 
-use serde_derive::{Serialize, Deserialize};
+use serde_derive::{Deserialize, Serialize};
 
 use crate::errors::Error;
 
@@ -39,7 +39,7 @@ impl std::str::FromStr for Algorithm {
             "sha256" => Ok(Algorithm::Sha256),
             "sha384" => Ok(Algorithm::Sha384),
             "sha512" => Ok(Algorithm::Sha512),
-            _ => Err(Error::ParseIntegrityError)
+            _ => Err(Error::ParseIntegrityError),
         }
     }
 }
@@ -58,18 +58,8 @@ mod tests {
 
     #[test]
     fn ordering() {
-        let mut arr = [
-            Sha1,
-            Sha256,
-            Sha384,
-            Sha512,
-        ];
+        let mut arr = [Sha1, Sha256, Sha384, Sha512];
         arr.sort_unstable();
-        assert_eq!(arr, [
-            Sha512,
-            Sha384,
-            Sha256,
-            Sha1,
-        ])
+        assert_eq!(arr, [Sha512, Sha384, Sha256, Sha1,])
     }
 }
