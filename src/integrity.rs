@@ -1,13 +1,15 @@
 use std::fmt;
 
-use hex;
-use serde_derive::{Deserialize, Serialize};
-
 use crate::algorithm::Algorithm;
 use crate::checker::IntegrityChecker;
 use crate::errors::Error;
 use crate::hash::Hash;
 use crate::opts::IntegrityOpts;
+
+#[cfg(feature = "serde")]
+use serde::de::{self, Deserialize, Deserializer, Visitor};
+#[cfg(feature = "serde")]
+use serde::ser::{Serialize, Serializer};
 
 /**
 Representation of a full [Subresource Integrity string](https://w3c.github.io/webappsec/specs/subresourceintegrity/).
@@ -26,7 +28,7 @@ let parsed: Integrity = source.parse().unwrap();
 assert_eq!(parsed.to_string(), source);
 ```
 */
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Integrity {
     pub hashes: Vec<Hash>,
 }
@@ -63,6 +65,43 @@ impl std::str::FromStr for Integrity {
             .collect::<Result<Vec<Hash>, Self::Err>>()?;
         hashes.sort();
         Ok(Integrity { hashes })
+    }
+}
+
+#[cfg(feature = "serde")]
+impl Serialize for Integrity {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.collect_str(self)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for Integrity {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct IntegrityVisitor;
+
+        impl<'de> Visitor<'de> for IntegrityVisitor {
+            type Value = Integrity;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("an Integrity object as a string")
+            }
+
+            fn visit_str<E>(self, v: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: de::Error,
+            {
+                v.parse::<Integrity>().map_err(de::Error::custom)
+            }
+        }
+
+        deserializer.deserialize_str(IntegrityVisitor)
     }
 }
 
@@ -109,7 +148,7 @@ impl Integrity {
     /// assert_eq!(sri3.to_string(), "sha256-deadbeef sha256-badc0ffee".to_owned());
     /// ```
     pub fn concat(&self, other: Integrity) -> Self {
-        let mut hashes = [self.hashes.clone(), other.hashes.clone()].concat();
+        let mut hashes = [self.hashes.clone(), other.hashes].concat();
         hashes.sort();
         hashes.dedup();
         Integrity { hashes }
@@ -220,5 +259,43 @@ mod tests {
         assert_eq!(sri1.matches(&sri2), Some(Algorithm::Sha256));
         assert_eq!(sri1.matches(&sri3), None);
         assert_eq!(sri2.matches(&sri1), None)
+    }
+
+    #[test]
+    fn de_json() {
+        use serde_derive::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct Thing {
+            integrity: Integrity,
+        }
+
+        let json = r#"{ "integrity": "sha1-deadbeef" }"#;
+        let de: Thing = serde_json::from_str(json).unwrap();
+
+        assert_eq!(
+            de,
+            Thing {
+                integrity: "sha1-deadbeef".parse().unwrap()
+            }
+        );
+    }
+
+    #[test]
+    fn ser_json() {
+        use serde_derive::Serialize;
+
+        #[derive(Debug, PartialEq, Serialize)]
+        struct Thing {
+            integrity: Integrity,
+        }
+
+        let thing = Thing {
+            integrity: "sha1-deadbeef".parse().unwrap(),
+        };
+        let ser = serde_json::to_string(&thing).unwrap();
+        let json = r#"{"integrity":"sha1-deadbeef"}"#;
+
+        assert_eq!(ser, json);
     }
 }
