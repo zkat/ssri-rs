@@ -1,3 +1,11 @@
+<a name="6.0.0"></a>
+
+## (2020-08-20)
+
+#### Breaking Changes
+
+- **integrity:** serialize/deserialize as a string ([6762fd53](https://github.com/zkat/ssri-rs/commit/6762fd533330e7202f9409c0971948b4eba6bd5e))
+
 <a name="5.0.0"></a>
 
 ## 5.0.0 (2019-10-20)
