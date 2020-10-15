@@ -124,6 +124,17 @@ impl digest::Reset for IntegrityOpts {
     }
 }
 
+impl std::io::Write for IntegrityOpts {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        self.input(buf);
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Algorithm;
@@ -138,6 +149,22 @@ mod tests {
             .result();
         assert_eq!(
             result.to_string(),
+            "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek= sha1-Kq5sNclPz7QV2+lfQIuc6R7oRu0="
+        )
+    }
+
+    #[test]
+    fn write_test() {
+        use std::io::Write;
+        let mut it = IntegrityOpts::new()
+            .algorithm(Algorithm::Sha1)
+            .algorithm(Algorithm::Sha256);
+        let size = it.write(b"hello ").expect("failed to write bytes");
+        assert_eq!(6, size);
+        let size = it.write(b"world").expect("failed to write bytes");
+        assert_eq!(5, size);
+        assert_eq!(
+            it.result().to_string(),
             "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek= sha1-Kq5sNclPz7QV2+lfQIuc6R7oRu0="
         )
     }
