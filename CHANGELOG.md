@@ -1,3 +1,16 @@
+# `ssri` Release Changelog
+
+<a name="7.0.0"></a>
+## 7.0.0 (2021-09-16)
+
+I've decided to move away from Parity for various Rust libraries, such as `ssri`.
+So it can be more permissively used now!
+
+### Features
+
+* **license:** change license to Apache-2.0 ([dad568fb](https://github.com/zkat/ssri-rs/commit/dad568fb7d61a71b428308f279cb287e45164cb8))
+    * **BREAKING CHANGE**: This is a significant licensing change. Please review.
+
 <a name="6.0.0"></a>
 
 ## (2020-08-20)
