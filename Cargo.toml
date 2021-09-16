@@ -4,13 +4,10 @@ version = "6.0.0"
 authors = ["Kat Marchán <kzm@zkat.tech>"]
 edition = "2018"
 description = "Various utilities for handling Subresource Integrity."
-license-file = "LICENSE.md"
+license = "Apache-2.0"
 repository = "https://github.com/zkat/ssri-rs"
 homepage = "https://github.com/zkat/ssri-rs"
 readme = "README.md"
-
-[badges]
-maintenance = { status = "actively-developed" }
 
 [dependencies]
 sha2 = "0.8.0"
