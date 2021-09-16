@@ -2,10 +2,7 @@ use crate::algorithm::Algorithm;
 use crate::hash::Hash;
 use crate::integrity::Integrity;
 
-use base64;
 use digest::Digest;
-use sha1;
-use sha2;
 
 #[allow(clippy::enum_variant_names)]
 #[derive(Clone)]

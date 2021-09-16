@@ -48,7 +48,7 @@ impl IntegrityChecker {
             .take_while(|h| h.algorithm == algo)
             .find(|&h| *h == sri.hashes[0])
             .map(|_| algo)
-            .ok_or_else(|| Error::IntegrityCheckError(wanted, sri))
+            .ok_or(Error::IntegrityCheckError(wanted, sri))
     }
 }
 

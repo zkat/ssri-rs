@@ -40,9 +40,13 @@ impl std::str::FromStr for Hash {
         let mut parsed = s.trim().split(|c| c == '-');
         let algorithm = parsed
             .next()
-            .ok_or(Error::ParseIntegrityError(s.into()))?
+            .ok_or_else(|| Error::ParseIntegrityError(s.into()))?
             .parse()?;
-        let digest = String::from(parsed.next().ok_or(Error::ParseIntegrityError(s.into()))?);
+        let digest = String::from(
+            parsed
+                .next()
+                .ok_or_else(|| Error::ParseIntegrityError(s.into()))?,
+        );
         Ok(Hash { algorithm, digest })
     }
 }
