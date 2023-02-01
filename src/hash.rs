@@ -36,6 +36,9 @@ impl fmt::Display for Hash {
 impl std::str::FromStr for Hash {
     type Err = Error;
 
+    /// Tries to parse a [&str] into a [struct@Hash].
+    /// Note the length of the digest is not validated to encode the number of
+    /// bytes expected by the chosen hash algorithm.
     fn from_str(s: &str) -> Result<Hash, Self::Err> {
         let mut parsed = s.trim().split(|c| c == '-');
         let algorithm = parsed
