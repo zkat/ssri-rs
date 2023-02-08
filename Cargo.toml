@@ -16,7 +16,7 @@ digest = "0.10"
 sha-1 = "0.10"
 hex = "0.3.2"
 serde = { version = "1.0.92", optional = true }
-thiserror = "1.0.3"
+thiserror = "1.0.38"
 
 [features]
 default = ["serde"]
