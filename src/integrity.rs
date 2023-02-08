@@ -6,6 +6,8 @@ use crate::errors::Error;
 use crate::hash::Hash;
 use crate::opts::IntegrityOpts;
 
+use base64::Engine as _;
+
 #[cfg(feature = "serde")]
 use serde::de::{self, Deserialize, Deserializer, Visitor};
 #[cfg(feature = "serde")]
@@ -187,7 +189,7 @@ impl Integrity {
         let hash = self.hashes.get(0).unwrap();
         (
             hash.algorithm,
-            hex::encode(base64::decode(&hash.digest).unwrap()),
+            hex::encode(base64::prelude::BASE64_STANDARD.encode(&hash.digest)),
         )
     }
 
