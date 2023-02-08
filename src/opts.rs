@@ -63,10 +63,10 @@ impl IntegrityOpts {
         self.disturbed = true;
         for hasher in self.hashers.iter_mut() {
             match hasher {
-                Hasher::Sha1(h) => digest::Digest::input(h, &input),
-                Hasher::Sha256(h) => digest::Digest::input(h, &input),
-                Hasher::Sha384(h) => digest::Digest::input(h, &input),
-                Hasher::Sha512(h) => digest::Digest::input(h, &input),
+                Hasher::Sha1(h) => digest::Digest::update(h, &input),
+                Hasher::Sha256(h) => digest::Digest::update(h, &input),
+                Hasher::Sha384(h) => digest::Digest::update(h, &input),
+                Hasher::Sha512(h) => digest::Digest::update(h, &input),
             }
         }
     }
@@ -90,10 +90,10 @@ impl IntegrityOpts {
             .into_iter()
             .map(|h| {
                 let (algorithm, data) = match h {
-                    Hasher::Sha1(h) => (Algorithm::Sha1, base64::encode(&h.result())),
-                    Hasher::Sha256(h) => (Algorithm::Sha256, base64::encode(&h.result())),
-                    Hasher::Sha384(h) => (Algorithm::Sha384, base64::encode(&h.result())),
-                    Hasher::Sha512(h) => (Algorithm::Sha512, base64::encode(&h.result())),
+                    Hasher::Sha1(h) => (Algorithm::Sha1, base64::encode(&h.finalize())),
+                    Hasher::Sha256(h) => (Algorithm::Sha256, base64::encode(&h.finalize())),
+                    Hasher::Sha384(h) => (Algorithm::Sha384, base64::encode(&h.finalize())),
+                    Hasher::Sha512(h) => (Algorithm::Sha512, base64::encode(&h.finalize())),
                 };
                 Hash {
                     algorithm,
@@ -106,11 +106,11 @@ impl IntegrityOpts {
     }
 }
 
-impl digest::Input for IntegrityOpts {
-    fn input<B: AsRef<[u8]>>(&mut self, input: B) {
-        self.input(input)
+impl digest::Update for IntegrityOpts {
+    fn update(&mut self, data: &[u8]) {
+        self.input(data);
     }
-    fn chain<B: AsRef<[u8]>>(self, input: B) -> Self {
+    fn chain(self, input: impl AsRef<[u8]>) -> Self {
         self.chain(input)
     }
 }

@@ -10,10 +10,10 @@ homepage = "https://github.com/zkat/ssri-rs"
 readme = "README.md"
 
 [dependencies]
-sha2 = "0.8.0"
+sha2 = "0.10"
 base64 = "0.10.1"
-digest = "0.8.0"
-sha-1 = "0.8.1"
+digest = "0.10"
+sha-1 = "0.10"
 hex = "0.3.2"
 serde = { version = "1.0.92", optional = true }
 thiserror = "1.0.3"
