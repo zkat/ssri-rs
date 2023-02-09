@@ -70,7 +70,7 @@ mod tests {
             .parse::<Integrity>()
             .unwrap()
             .concat(Integrity::from(b"hello world"));
-        eprintln!("\n{}", sri);
+        eprintln!("\n{sri}");
         let result = IntegrityChecker::new(sri).chain(b"hello world").result();
         assert_eq!(result.unwrap(), Algorithm::Sha256)
     }
