@@ -2,6 +2,8 @@ use crate::algorithm::Algorithm;
 use crate::hash::Hash;
 use crate::integrity::Integrity;
 
+use base64::prelude::BASE64_STANDARD;
+use base64::Engine;
 use digest::Digest;
 
 #[allow(clippy::enum_variant_names)]
@@ -90,10 +92,10 @@ impl IntegrityOpts {
             .into_iter()
             .map(|h| {
                 let (algorithm, data) = match h {
-                    Hasher::Sha1(h) => (Algorithm::Sha1, base64::encode(&h.finalize())),
-                    Hasher::Sha256(h) => (Algorithm::Sha256, base64::encode(&h.finalize())),
-                    Hasher::Sha384(h) => (Algorithm::Sha384, base64::encode(&h.finalize())),
-                    Hasher::Sha512(h) => (Algorithm::Sha512, base64::encode(&h.finalize())),
+                    Hasher::Sha1(h) => (Algorithm::Sha1, BASE64_STANDARD.encode(h.finalize())),
+                    Hasher::Sha256(h) => (Algorithm::Sha256, BASE64_STANDARD.encode(h.finalize())),
+                    Hasher::Sha384(h) => (Algorithm::Sha384, BASE64_STANDARD.encode(h.finalize())),
+                    Hasher::Sha512(h) => (Algorithm::Sha512, BASE64_STANDARD.encode(h.finalize())),
                 };
                 Hash {
                     algorithm,
