@@ -189,7 +189,11 @@ impl Integrity {
         let hash = self.hashes.get(0).unwrap();
         (
             hash.algorithm,
-            hex::encode(base64::prelude::BASE64_STANDARD.encode(&hash.digest)),
+            hex::encode(
+                base64::prelude::BASE64_STANDARD
+                    .decode(&hash.digest)
+                    .unwrap(),
+            ),
         )
     }
 
