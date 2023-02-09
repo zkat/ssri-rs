@@ -44,10 +44,10 @@ mod tests {
 
     #[test]
     fn algorithm_formatting() {
-        assert_eq!(format!("{Sha1}"), "sha1");
-        assert_eq!(format!("{Sha256}"), "sha256");
-        assert_eq!(format!("{Sha384}"), "sha384");
-        assert_eq!(format!("{Sha512}"), "sha512");
+        assert_eq!(format!("{}", Sha1), "sha1");
+        assert_eq!(format!("{}", Sha256), "sha256");
+        assert_eq!(format!("{}", Sha384), "sha384");
+        assert_eq!(format!("{}", Sha512), "sha512");
     }
 
     #[test]
