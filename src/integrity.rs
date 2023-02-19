@@ -30,7 +30,7 @@ let parsed: Integrity = source.parse().unwrap();
 assert_eq!(parsed.to_string(), source);
 ```
 */
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Integrity {
     pub hashes: Vec<Hash>,
 }

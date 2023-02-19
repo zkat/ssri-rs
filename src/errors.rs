@@ -3,7 +3,7 @@ use thiserror::Error;
 use crate::Integrity;
 
 /// Integrity-related error values.
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum Error {
     /// Error parsing an SRI string into an Integrity object.
     #[error("Failed to parse subresource integrity string: {0}")]

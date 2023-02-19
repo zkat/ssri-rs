@@ -10,7 +10,7 @@ Represents a single algorithm/digest pair.
 This is mostly internal, although users might interact with it directly on
 occasion.
 */
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Hash {
     pub algorithm: Algorithm,
     pub digest: String,

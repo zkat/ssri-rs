@@ -16,6 +16,7 @@ let checker = IntegrityChecker::new(sri).chain(&data);
 assert_eq!(checker.result().unwrap(), Algorithm::Sha256);
 ```
 */
+#[derive(Debug)]
 pub struct IntegrityChecker {
     sri: Integrity,
     builder: IntegrityOpts,

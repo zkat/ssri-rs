@@ -7,7 +7,7 @@ use base64::Engine;
 use digest::Digest;
 
 #[allow(clippy::enum_variant_names)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 enum Hasher {
     Sha1(sha1::Sha1),
     Sha256(sha2::Sha256),
@@ -31,7 +31,7 @@ let sri = IntegrityOpts::new()
 ```
 
 */
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct IntegrityOpts {
     hashers: Vec<Hasher>,
     disturbed: bool,
