@@ -1,5 +1,16 @@
 # `ssri` Release Changelog
 
+<a name="8.1.0"></a>
+## 8.1.0 (2023-04-01)
+
+This release upgrades miette and thiserror in lockstep, bringing in syn2, in
+order to avoid [potential issues with the
+upgrade](https://github.com/yaahc/eyre/pull/92).
+
+### Features
+
+* **deps:** bump miette and thiserror ([4ecc2c08](https://github.com/zkat/ssri-rs/commit/4ecc2c0885b6221c42f8c0cf9c3d6448843adb80))
+
 <a name="8.0.0"></a>
 ## 8.0.0 (2023-02-19)
 
