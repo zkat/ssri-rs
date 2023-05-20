@@ -1,5 +1,13 @@
 # `ssri` Release Changelog
 
+<a name="9.0.0"></a>
+## 9.0.0 (2023-05-20)
+
+### Features
+
+* **xxhash:** add xxhash as a supported algorithm (#9) ([f458aa5e](https://github.com/zkat/ssri-rs/commit/f458aa5ee980e3ba7d96ee547dc05909c3fa2674))
+    * **BREAKING CHANGE**: Adds a new algorithm, and makes Algorithm and Hasher `#[non_exhaustive]`.
+
 <a name="8.1.0"></a>
 ## 8.1.0 (2023-04-01)
 
