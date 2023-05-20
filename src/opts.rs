@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::algorithm::Algorithm;
 use crate::hash::Hash;
 use crate::integrity::Integrity;
@@ -7,12 +9,26 @@ use base64::Engine;
 use digest::Digest;
 
 #[allow(clippy::enum_variant_names)]
-#[derive(Clone, Debug)]
+#[non_exhaustive]
+#[derive(Clone)]
 enum Hasher {
     Sha1(sha1::Sha1),
     Sha256(sha2::Sha256),
     Sha384(sha2::Sha384),
     Sha512(sha2::Sha512),
+    Xxh3(Box<xxhash_rust::xxh3::Xxh3>),
+}
+
+impl Debug for Hasher {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Sha1(arg0) => f.debug_tuple("Sha1").field(arg0).finish(),
+            Self::Sha256(arg0) => f.debug_tuple("Sha256").field(arg0).finish(),
+            Self::Sha384(arg0) => f.debug_tuple("Sha384").field(arg0).finish(),
+            Self::Sha512(arg0) => f.debug_tuple("Sha512").field(arg0).finish(),
+            Self::Xxh3(_arg0) => f.debug_tuple("Xxh3").finish(),
+        }
+    }
 }
 
 /**
@@ -56,19 +72,22 @@ impl IntegrityOpts {
             Algorithm::Sha256 => Hasher::Sha256(sha2::Sha256::new()),
             Algorithm::Sha384 => Hasher::Sha384(sha2::Sha384::new()),
             Algorithm::Sha512 => Hasher::Sha512(sha2::Sha512::new()),
+            Algorithm::Xxh3 => Hasher::Xxh3(Box::new(xxhash_rust::xxh3::Xxh3::new())),
         });
         self
     }
 
     /// Add some data to this IntegrityOpts. All internal hashers will be updated for all configured `Algorithm`s.
     pub fn input<B: AsRef<[u8]>>(&mut self, input: B) {
+        let input = input.as_ref();
         self.disturbed = true;
         for hasher in self.hashers.iter_mut() {
             match hasher {
-                Hasher::Sha1(h) => digest::Digest::update(h, &input),
-                Hasher::Sha256(h) => digest::Digest::update(h, &input),
-                Hasher::Sha384(h) => digest::Digest::update(h, &input),
-                Hasher::Sha512(h) => digest::Digest::update(h, &input),
+                Hasher::Sha1(h) => digest::Digest::update(h, input),
+                Hasher::Sha256(h) => digest::Digest::update(h, input),
+                Hasher::Sha384(h) => digest::Digest::update(h, input),
+                Hasher::Sha512(h) => digest::Digest::update(h, input),
+                Hasher::Xxh3(h) => h.update(input),
             }
         }
     }
@@ -96,6 +115,10 @@ impl IntegrityOpts {
                     Hasher::Sha256(h) => (Algorithm::Sha256, BASE64_STANDARD.encode(h.finalize())),
                     Hasher::Sha384(h) => (Algorithm::Sha384, BASE64_STANDARD.encode(h.finalize())),
                     Hasher::Sha512(h) => (Algorithm::Sha512, BASE64_STANDARD.encode(h.finalize())),
+                    Hasher::Xxh3(h) => (
+                        Algorithm::Xxh3,
+                        BASE64_STANDARD.encode(h.digest128().to_be_bytes()),
+                    ),
                 };
                 Hash {
                     algorithm,
