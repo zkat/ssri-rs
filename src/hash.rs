@@ -110,6 +110,10 @@ mod tests {
                 algorithm: Algorithm::Sha512,
                 digest: String::from("foo=="),
             },
+            Hash {
+                algorithm: Algorithm::Xxh3,
+                digest: String::from("foo=="),
+            },
         ];
         arr.sort_unstable();
         assert_eq!(
@@ -129,6 +133,10 @@ mod tests {
                 },
                 Hash {
                     algorithm: Algorithm::Sha1,
+                    digest: String::from("foo==")
+                },
+                Hash {
+                    algorithm: Algorithm::Xxh3,
                     digest: String::from("foo==")
                 }
             ]
