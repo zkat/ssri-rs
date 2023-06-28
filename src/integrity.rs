@@ -138,6 +138,23 @@ impl Integrity {
             .result()
     }
 
+    /// Converts a hex string obtained from `to_hex()` to an `Integrity` with a `Hash` containing algorithm and decoded hex string.
+    ///
+    /// # Example
+    ///```
+    /// use ssri::{Integrity, Algorithm};
+    ///
+    /// let expected = Integrity::from(b"hello");
+    /// let hex = String::from("2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+    /// assert_eq!(Integrity::from_hex(hex, Algorithm::Sha256), expected);
+    ///```
+    pub fn from_hex<B: AsRef<[u8]>>(hex: B, algorithm: Algorithm) -> Integrity {
+        let digest = base64::prelude::BASE64_STANDARD.encode(hex::decode(hex).unwrap());
+        Integrity {
+            hashes: vec![Hash { algorithm, digest }],
+        }
+    }
+
     /// Join together two `Integrity` instances. Hashes will be grouped and
     /// sorted by algorithm but otherwise kept in the same order.
     ///
@@ -239,6 +256,16 @@ mod tests {
                 digest: String::from("deadbeef=")
             }
         )
+    }
+
+    #[test]
+    fn from_hex() {
+        let expected_integrity = Integrity::from(b"hello world");
+        let hex = String::from("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
+        assert_eq!(
+            Integrity::from_hex(hex, Algorithm::Sha256),
+            expected_integrity
+        );
     }
 
     #[test]
