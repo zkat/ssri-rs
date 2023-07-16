@@ -1,5 +1,12 @@
 # `ssri` Release Changelog
 
+<a name="9.1.0"></a>
+## 9.1.0 (2023-07-16)
+
+### Features
+
+* **deps:** Relax sha-1 dep constraint (#12) ([95473be7](https://github.com/zkat/ssri-rs/commit/95473be7c23b1a1e350409c7d0c6177ab663b9f9))
+
 <a name="9.0.0"></a>
 ## 9.0.0 (2023-05-20)
 
