@@ -149,10 +149,7 @@ impl Integrity {
     /// assert_eq!(Integrity::from_hex(hex, Algorithm::Sha256).unwrap(), expected);
     ///```
     pub fn from_hex<B: AsRef<[u8]>>(hex: B, algorithm: Algorithm) -> Result<Integrity, Error> {
-        let b16 = match hex::decode(hex) {
-            Ok(data) => data,
-            Err(e) => return Err(Error::HexDecodeError(e.to_string())),
-        };
+        let b16 = hex::decode(hex).map_err(|e| Error::HexDecodeError(e.to_string()))?;
         let digest = base64::prelude::BASE64_STANDARD.encode(b16);
         Ok(Integrity {
             hashes: vec![Hash { algorithm, digest }],
