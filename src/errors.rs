@@ -14,4 +14,8 @@ pub enum Error {
     #[error("Integrity check failed.\n\tWanted: {0}\n\tActual: {1}")]
     #[diagnostic(code(ssri::integrity_check_error), url(docsrs))]
     IntegrityCheckError(Integrity, Integrity),
+    /// Error Decoding Hex Data
+    #[error("Failed decode hexadecimal data, reason: {0}")]
+    #[diagnostic(code(ssri::hex_decode_error), url(docsrs))]
+    HexDecodeError(String),
 }
