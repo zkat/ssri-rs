@@ -1,5 +1,12 @@
 # `ssri` Release Changelog
 
+<a name="9.2.0"></a>
+## 9.2.0 (2023-07-18)
+
+### Features
+
+* **from_hex:** Implemented Integrity::from_hex(), inverse of Integrity::to_hex() (#11) ([19b34fe4](https://github.com/zkat/ssri-rs/commit/19b34fe4cc2ad788398ac3a61472230a7966b5d7))
+
 <a name="9.1.0"></a>
 ## 9.1.0 (2023-07-16)
 
